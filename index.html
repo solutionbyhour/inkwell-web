@@ -270,11 +270,42 @@
     }
     .footer-links a:hover { color: var(--text); }
 
-    @media (max-width: 600px) {
-      nav { padding: 0 20px; }
-      .hero { padding: 72px 20px 60px; }
+    @media (max-width: 640px) {
+      nav { padding: 0 16px; }
+      .hero { padding: 56px 20px 44px; }
+      .hero p.tagline { font-size: 1rem; margin-bottom: 28px; }
       .btn { padding: 12px 20px; font-size: 0.875rem; }
-      footer { flex-direction: column; align-items: flex-start; }
+      .section { padding: 52px 16px; }
+      .section-sub { margin-bottom: 36px; }
+      .cta-section { padding: 60px 20px; }
+      .divider { margin: 0; }
+      footer { flex-direction: column; align-items: flex-start; padding: 24px 16px; gap: 16px; }
+
+      /* Carousel — switch to native scroll-snap on mobile */
+      .carousel-outer { display: block; }
+      .carousel-btn   { display: none; }
+      .carousel-track-wrap {
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        padding: 20px 0 12px;
+        scrollbar-width: none;
+      }
+      .carousel-track-wrap::-webkit-scrollbar { display: none; }
+      .carousel-track {
+        transition: none;
+        /* padding centers first & last card — half viewport minus half card (130px) */
+        padding: 0 calc(50vw - 130px);
+      }
+      .phone {
+        flex: 0 0 260px;
+        scroll-snap-align: center;
+        opacity: 1 !important;
+        transform: none !important;
+        box-shadow: 0 12px 40px rgba(0,0,0,0.5) !important;
+      }
+      .phone img { height: 460px; }
+      .carousel-dots { display: none; }
     }
   </style>
 </head>
@@ -442,7 +473,10 @@
   const btnPrev = document.getElementById('prev');
   const btnNext = document.getElementById('next');
 
+  function isMobile() { return window.innerWidth <= 640; }
+
   function updateTrack() {
+    if (isMobile()) { track.style.transform = ''; return; }
     const wrap   = document.querySelector('.carousel-track-wrap');
     const offset = (wrap.offsetWidth / 2) - (PHONE_W / 2) - cur * (PHONE_W + GAP);
     track.style.transform = `translateX(${offset}px)`;
@@ -461,12 +495,16 @@
 
   function slide(dir) { goTo(Math.max(0, Math.min(COUNT - 1, cur + dir))); }
 
-  // Swipe support
+  // Swipe support (desktop only — mobile uses native scroll-snap)
   let tx = 0;
-  track.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
-  track.addEventListener('touchend',   e => {
-    const diff = tx - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 50) slide(diff > 0 ? 1 : -1);
+  track.addEventListener('touchstart', e => {
+    if (!isMobile()) tx = e.touches[0].clientX;
+  }, { passive: true });
+  track.addEventListener('touchend', e => {
+    if (!isMobile()) {
+      const diff = tx - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 50) slide(diff > 0 ? 1 : -1);
+    }
   }, { passive: true });
 
   // Keyboard
