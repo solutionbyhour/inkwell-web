@@ -2,7 +2,7 @@
 
 Public landing page for **Inkwell**, a local comic and book reader for Android.
 
-Hosted at → **[shubhamkokul.github.io/inkwell-web](https://shubhamkokul.github.io/inkwell-web/)**
+Hosted at → **[solutionbyhour.github.io/inkwell-web](https://solutionbyhour.github.io/inkwell-web/)**
 
 ---
 
@@ -51,7 +51,7 @@ GitHub Pages rebuilds automatically — live in ~60 seconds.
 Edit `privacy-policy.html` directly and update the `Last updated` date at the top. The canonical URL is:
 
 ```
-https://shubhamkokul.github.io/inkwell-web/privacy-policy.html
+https://solutionbyhour.github.io/inkwell-web/privacy-policy.html
 ```
 
 This URL is hardcoded in:
@@ -71,6 +71,6 @@ python3 -m http.server 8080
 
 ## Links
 
-- **App website:** https://shubhamkokul.github.io/inkwell-web/
+- **App website:** https://solutionbyhour.github.io/inkwell-web/
 - **Play Store:** *(coming soon)*
 - **Contact:** shubhamkokul@gmail.com
