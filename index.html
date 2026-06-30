@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Inkwell — Comic &amp; Book Reader for Android</title>
   <meta name="description" content="Inkwell is a local comic and book reader for Android. CBR, CBZ, PDF, EPUB, CB7 — no accounts, no internet, no tracking." />
-  <link rel="canonical" href="https://solutionbyhour.github.io/inkwell-web/" />
+  <link rel="canonical" href="https://shubhamkokul.github.io/inkwell-app/" />
 
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -127,88 +127,41 @@
     }
 
     /* ── Carousel ────────────────────────────────────────── */
-    .carousel-outer {
-      display: flex;
-      align-items: center;
+    .carousel-wrap { position: relative; }
+    .carousel {
+      display: flex; gap: 20px;
+      overflow-x: auto; scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      padding: 16px 48px 32px; scrollbar-width: none;
     }
-    .carousel-track-wrap {
-      flex: 1;
-      overflow: hidden;
-      padding: 48px 0 40px;
-    }
-    .carousel-track {
-      display: flex;
-      gap: 24px;
-      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-      will-change: transform;
-    }
+    .carousel::-webkit-scrollbar { display: none; }
     .phone {
-      flex: 0 0 280px;
-      border-radius: 36px;
-      overflow: hidden;
+      flex: 0 0 auto; scroll-snap-align: center; width: 210px;
+      border-radius: 28px; overflow: hidden;
       border: 2px solid rgba(255,255,255,0.1);
-      box-shadow: 0 24px 64px rgba(0,0,0,0.5);
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.04), 0 24px 64px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06);
       background: #000;
-      opacity: 0.4;
-      transform: scale(0.87);
-      transition: transform 0.5s cubic-bezier(0.4,0,0.2,1),
-                  opacity 0.5s cubic-bezier(0.4,0,0.2,1),
-                  box-shadow 0.5s;
-      cursor: pointer;
+      transition: transform 0.25s, box-shadow 0.25s;
     }
-    .phone.active {
-      opacity: 1;
-      transform: scale(1);
-      box-shadow:
-        0 0 0 1px rgba(230,57,70,0.3),
-        0 40px 80px rgba(0,0,0,0.7),
-        0 0 60px rgba(230,57,70,0.18);
+    .phone:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 0 0 1px rgba(230,57,70,0.25), 0 32px 80px rgba(0,0,0,0.7), 0 0 40px rgba(230,57,70,0.12);
     }
     .phone img {
       width: 100%; display: block;
-      object-fit: cover; object-position: top;
-      height: 560px;
+      object-fit: cover; object-position: top; max-height: 420px;
     }
     .phone-label {
-      padding: 13px 16px; font-size: 0.8rem; font-weight: 600;
-      letter-spacing: 0.05em; text-align: center;
+      padding: 10px 12px; font-size: 0.72rem; font-weight: 600;
+      color: var(--muted); letter-spacing: 0.04em;
       background: var(--surface); border-top: 1px solid var(--border);
-      color: var(--muted);
-      transition: color 0.4s;
     }
-    .phone.active .phone-label { color: var(--text); }
-
-    .carousel-btn {
-      flex: 0 0 auto;
-      width: 48px; height: 48px;
-      border-radius: 50%;
-      border: 1px solid var(--border);
-      background: var(--surface);
-      color: var(--text);
-      font-size: 1.6rem; line-height: 1;
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      margin: 0 20px;
-      transition: background 0.2s, border-color 0.2s, transform 0.15s;
+    .carousel-wrap::before, .carousel-wrap::after {
+      content: ''; position: absolute; top: 0; bottom: 0;
+      width: 64px; pointer-events: none; z-index: 2;
     }
-    .carousel-btn:hover {
-      background: rgba(230,57,70,0.15);
-      border-color: rgba(230,57,70,0.4);
-      transform: scale(1.1);
-    }
-    .carousel-btn:disabled { opacity: 0.25; cursor: default; transform: none; }
-
-    .carousel-dots {
-      display: flex; justify-content: center; gap: 8px;
-      padding-bottom: 8px;
-    }
-    .dot {
-      height: 8px; width: 8px; border-radius: 99px;
-      background: rgba(255,255,255,0.2);
-      border: none; cursor: pointer;
-      transition: background 0.3s, width 0.3s;
-    }
-    .dot.active { background: var(--red); width: 24px; }
+    .carousel-wrap::before { left: 0; background: linear-gradient(to right, var(--bg), transparent); }
+    .carousel-wrap::after  { right: 0; background: linear-gradient(to left,  var(--bg), transparent); }
 
     /* ── Format pills ────────────────────────────────────── */
     .formats {
@@ -270,42 +223,11 @@
     }
     .footer-links a:hover { color: var(--text); }
 
-    @media (max-width: 640px) {
-      nav { padding: 0 16px; }
-      .hero { padding: 56px 20px 44px; }
-      .hero p.tagline { font-size: 1rem; margin-bottom: 28px; }
+    @media (max-width: 600px) {
+      nav { padding: 0 20px; }
+      .hero { padding: 72px 20px 60px; }
       .btn { padding: 12px 20px; font-size: 0.875rem; }
-      .section { padding: 52px 16px; }
-      .section-sub { margin-bottom: 36px; }
-      .cta-section { padding: 60px 20px; }
-      .divider { margin: 0; }
-      footer { flex-direction: column; align-items: flex-start; padding: 24px 16px; gap: 16px; }
-
-      /* Carousel — switch to native scroll-snap on mobile */
-      .carousel-outer { display: block; }
-      .carousel-btn   { display: none; }
-      .carousel-track-wrap {
-        overflow-x: auto;
-        scroll-snap-type: x mandatory;
-        -webkit-overflow-scrolling: touch;
-        padding: 20px 0 12px;
-        scrollbar-width: none;
-      }
-      .carousel-track-wrap::-webkit-scrollbar { display: none; }
-      .carousel-track {
-        transition: none;
-        /* padding centers first & last card — half viewport minus half card (130px) */
-        padding: 0 calc(50vw - 130px);
-      }
-      .phone {
-        flex: 0 0 260px;
-        scroll-snap-align: center;
-        opacity: 1 !important;
-        transform: none !important;
-        box-shadow: 0 12px 40px rgba(0,0,0,0.5) !important;
-      }
-      .phone img { height: 460px; }
-      .carousel-dots { display: none; }
+      footer { flex-direction: column; align-items: flex-start; }
     }
   </style>
 </head>
@@ -326,13 +248,13 @@
     <svg width="10" height="10" viewBox="0 0 10 10" fill="var(--red)"><circle cx="5" cy="5" r="5"/></svg>
     Android App
   </div>
-  <h1>Read your comics<br>and books.<br><em>Your way.</em></h1>
+  <h1>Read your comics.<br><em>Your way.</em></h1>
   <p class="tagline">
-    A local comic and book reader. CBR, CBZ, PDF, EPUB and more —
-    no accounts, no cloud, no tracking. Just your files, beautifully organized.
+    A local comic and book reader. No accounts, no cloud,
+    no tracking — just your files, beautifully organized.
   </p>
   <div class="cta-row">
-    <a class="btn btn-primary" href="inkwell-1.0.apk" download="inkwell-1.0.apk">
+    <a class="btn btn-primary" href="inkwell-1.1.apk" download="inkwell-1.1.apk">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
       Download APK
     </a>
@@ -341,7 +263,7 @@
       Play Store — Coming Soon
     </a>
   </div>
-  <p class="apk-meta">v1.0 &nbsp;·&nbsp; Android 8.0+ &nbsp;·&nbsp; 8.3 MB &nbsp;·&nbsp; <a href="privacy-policy.html">Privacy Policy</a></p>
+  <p class="apk-meta">v1.1 &nbsp;·&nbsp; Android 8.0+ &nbsp;·&nbsp; 8.3 MB &nbsp;·&nbsp; <a href="privacy-policy.html">Privacy Policy</a></p>
 </section>
 
 <div class="divider"></div>
@@ -352,40 +274,29 @@
   <h2 class="section-title">Everything you need, nothing you don't</h2>
   <p class="section-sub">Clean grid, fast reader, smart organization. Works entirely offline.</p>
 
-  <div class="carousel-outer">
-    <button class="carousel-btn" id="prev" onclick="slide(-1)" aria-label="Previous">&#8249;</button>
-    <div class="carousel-track-wrap">
-      <div class="carousel-track" id="track">
-        <div class="phone active" onclick="goTo(0)">
-          <img src="screenshots/01-onboarding.png" alt="Inkwell welcome screen" />
-          <div class="phone-label">Welcome</div>
-        </div>
-        <div class="phone" onclick="goTo(1)">
-          <img src="screenshots/02-library.png" alt="Comic library grid" />
-          <div class="phone-label">Library</div>
-        </div>
-        <div class="phone" onclick="goTo(2)">
-          <img src="screenshots/03-reader.png" alt="Comic reader" />
-          <div class="phone-label">Reader</div>
-        </div>
-        <div class="phone" onclick="goTo(3)">
-          <img src="screenshots/04-collections.png" alt="Shelves view" />
-          <div class="phone-label">Shelves</div>
-        </div>
-        <div class="phone" onclick="goTo(4)">
-          <img src="screenshots/05-settings.png" alt="Settings screen" />
-          <div class="phone-label">Settings</div>
-        </div>
+  <div class="carousel-wrap">
+    <div class="carousel">
+      <div class="phone">
+        <img src="screenshots/01-onboarding.png" alt="Inkwell welcome screen" loading="lazy" />
+        <div class="phone-label">Welcome</div>
+      </div>
+      <div class="phone">
+        <img src="screenshots/02-library.png" alt="Comic library grid" loading="lazy" />
+        <div class="phone-label">Library</div>
+      </div>
+      <div class="phone">
+        <img src="screenshots/03-reader.png" alt="Comic reader" loading="lazy" />
+        <div class="phone-label">Reader</div>
+      </div>
+      <div class="phone">
+        <img src="screenshots/04-collections.png" alt="Shelves view" loading="lazy" />
+        <div class="phone-label">Shelves</div>
+      </div>
+      <div class="phone">
+        <img src="screenshots/05-settings.png" alt="Settings screen" loading="lazy" />
+        <div class="phone-label">Settings</div>
       </div>
     </div>
-    <button class="carousel-btn" id="next" onclick="slide(1)" aria-label="Next">&#8250;</button>
-  </div>
-  <div class="carousel-dots">
-    <button class="dot active" onclick="goTo(0)"></button>
-    <button class="dot" onclick="goTo(1)"></button>
-    <button class="dot" onclick="goTo(2)"></button>
-    <button class="dot" onclick="goTo(3)"></button>
-    <button class="dot" onclick="goTo(4)"></button>
   </div>
 
   <div class="formats">
@@ -439,15 +350,55 @@
   </div>
 </section>
 
+<!-- ── What's New ─────────────────────────────────────────── -->
+<section class="section">
+  <p class="section-label">What's new</p>
+  <h2 class="section-title">v1.1 — Stability &amp; folder view</h2>
+  <p class="section-sub">A focused release fixing storage-access bugs and polishing the folder browser.</p>
+
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🗂️</div>
+      <h3>Picked folder is the root</h3>
+      <p>The folder you pick is now your library root. Subfolders show up directly at the top level, not nested one deeper.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🎨</div>
+      <h3>Better folder covers</h3>
+      <p>Folder thumbnails now sample one cover from each subfolder instead of four from whichever folder sorts first.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">▶️</div>
+      <h3>Continue Reading everywhere</h3>
+      <p>The Continue Reading carousel now appears in folder view too, so resuming a comic is one tap from any layout.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🛠️</div>
+      <h3>Reliable storage access</h3>
+      <p>Comics now open consistently across all storage providers — Drive, local storage, SD card, and SAF tree URIs all use the same code path.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <h3>Smoother indexing</h3>
+      <p>Library indexing and cover extraction now cancel cleanly when you navigate away — no more background work draining battery.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🐛</div>
+      <h3>Crash fixes</h3>
+      <p>Fixed an EPUB crash on older Android versions and a rare race between closing and reading a comic.</p>
+    </div>
+  </div>
+</section>
+
 <!-- ── Download CTA ───────────────────────────────────────── -->
 <section class="cta-section">
   <p class="section-label">Download</p>
   <h2>Ready to start reading?</h2>
   <p>Sideload the APK now. Play Store listing coming soon.</p>
   <div class="cta-row">
-    <a class="btn btn-primary" href="inkwell-1.0.apk" download="inkwell-1.0.apk">
+    <a class="btn btn-primary" href="inkwell-1.1.apk" download="inkwell-1.1.apk">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      Download APK — v1.0
+      Download APK — v1.1
     </a>
   </div>
   <p style="margin-top:16px; font-size:0.8rem; color:var(--muted);">
@@ -464,57 +415,5 @@
   </div>
 </footer>
 
-<script>
-  let cur = 0;
-  const PHONE_W = 280, GAP = 24, COUNT = 5;
-  const track  = document.getElementById('track');
-  const phones = document.querySelectorAll('.phone');
-  const dots   = document.querySelectorAll('.dot');
-  const btnPrev = document.getElementById('prev');
-  const btnNext = document.getElementById('next');
-
-  function isMobile() { return window.innerWidth <= 640; }
-
-  function updateTrack() {
-    if (isMobile()) { track.style.transform = ''; return; }
-    const wrap   = document.querySelector('.carousel-track-wrap');
-    const offset = (wrap.offsetWidth / 2) - (PHONE_W / 2) - cur * (PHONE_W + GAP);
-    track.style.transform = `translateX(${offset}px)`;
-    btnPrev.disabled = cur === 0;
-    btnNext.disabled = cur === COUNT - 1;
-  }
-
-  function goTo(idx) {
-    phones[cur].classList.remove('active');
-    dots[cur].classList.remove('active');
-    cur = idx;
-    phones[cur].classList.add('active');
-    dots[cur].classList.add('active');
-    updateTrack();
-  }
-
-  function slide(dir) { goTo(Math.max(0, Math.min(COUNT - 1, cur + dir))); }
-
-  // Swipe support (desktop only — mobile uses native scroll-snap)
-  let tx = 0;
-  track.addEventListener('touchstart', e => {
-    if (!isMobile()) tx = e.touches[0].clientX;
-  }, { passive: true });
-  track.addEventListener('touchend', e => {
-    if (!isMobile()) {
-      const diff = tx - e.changedTouches[0].clientX;
-      if (Math.abs(diff) > 50) slide(diff > 0 ? 1 : -1);
-    }
-  }, { passive: true });
-
-  // Keyboard
-  document.addEventListener('keydown', e => {
-    if (e.key === 'ArrowLeft')  slide(-1);
-    if (e.key === 'ArrowRight') slide(1);
-  });
-
-  window.addEventListener('resize', updateTrack);
-  window.addEventListener('load',   updateTrack);
-</script>
 </body>
 </html>
