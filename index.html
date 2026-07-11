@@ -7,409 +7,530 @@
   <meta name="description" content="Inkwell is a local comic and book reader for Android. CBR, CBZ, PDF, EPUB, CB7 — no accounts, no internet, no tracking." />
   <link rel="canonical" href="https://shubhamkokul.github.io/inkwell-app/" />
 
+  <!-- Google Fonts: Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:       #0D1117;
-      --surface:  #161B22;
-      --border:   rgba(255,255,255,0.08);
-      --red:      #E63946;
-      --red-dim:  rgba(230,57,70,0.15);
-      --text:     #F0F6FC;
-      --muted:    rgba(240,246,252,0.55);
+      --bg:           #07090E;
+      --surface:      rgba(18, 22, 32, 0.45);
+      --surface-card: rgba(18, 22, 32, 0.65);
+      --border:       rgba(255, 255, 255, 0.06);
+      --border-hover: rgba(255, 59, 48, 0.25);
+      --red:          #FF3B30;
+      --red-dim:      rgba(255, 59, 48, 0.08);
+      --red-glow:     rgba(255, 59, 48, 0.35);
+      --text:         #F5F6F9;
+      --muted:        rgba(245, 246, 249, 0.62);
+      --gradient:     linear-gradient(135deg, #FF3B30 0%, #FF2D55 100%);
     }
 
     html { scroll-behavior: smooth; }
 
     body {
-      background: var(--bg);
+      background-color: var(--bg);
       color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       line-height: 1.6;
       overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ── Ambient Background Blobs ────────────────────────── */
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      z-index: -1;
+      opacity: 0.15;
+      pointer-events: none;
+    }
+    .blob-1 {
+      top: -10%; left: 15%;
+      width: 450px; height: 450px;
+      background: var(--red);
+      animation: float 25s infinite ease-in-out;
+    }
+    .blob-2 {
+      top: 45%; right: -5%;
+      width: 550px; height: 550px;
+      background: #2563EB;
+      animation: float 30s infinite ease-in-out reverse;
+    }
+    .blob-3 {
+      bottom: 5%; left: -5%;
+      width: 400px; height: 400px;
+      background: #7C3AED;
+      animation: float 22s infinite ease-in-out;
+    }
+
+    @keyframes float {
+      0% { transform: translate(0px, 0px) scale(1); }
+      33% { transform: translate(30px, -50px) scale(1.08); }
+      66% { transform: translate(-20px, 20px) scale(0.96); }
+      100% { transform: translate(0px, 0px) scale(1); }
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.2);
     }
 
     /* ── Nav ─────────────────────────────────────────────── */
     nav {
       position: sticky; top: 0; z-index: 100;
-      background: rgba(13,17,23,0.85);
-      backdrop-filter: blur(12px);
+      background: rgba(7, 9, 14, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border);
-      padding: 0 32px; height: 56px;
+      padding: 0 40px; height: 64px;
       display: flex; align-items: center; justify-content: space-between;
     }
     .nav-logo {
-      font-size: 1.1rem; font-weight: 700; letter-spacing: 0.04em;
+      font-size: 1.2rem; font-weight: 800; letter-spacing: 0.04em;
       color: var(--text); text-decoration: none;
       display: flex; align-items: center; gap: 8px;
     }
     .nav-logo span.dot { color: var(--red); }
     nav a.nav-link {
       color: var(--muted); text-decoration: none;
-      font-size: 0.875rem; transition: color 0.2s;
+      font-size: 0.9rem; font-weight: 500; transition: color 0.2s;
     }
     nav a.nav-link:hover { color: var(--text); }
 
     /* ── Hero ────────────────────────────────────────────── */
     .hero {
       position: relative; text-align: center;
-      padding: 100px 24px 80px; overflow: hidden;
-    }
-    .hero::before {
-      content: ''; position: absolute; top: -120px; left: 50%;
-      transform: translateX(-50%);
-      width: 600px; height: 600px;
-      background: radial-gradient(circle, rgba(230,57,70,0.18) 0%, transparent 70%);
-      pointer-events: none;
+      padding: 120px 24px 80px;
+      max-width: 1200px;
+      margin: 0 auto;
     }
     .badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: var(--red-dim); border: 1px solid rgba(230,57,70,0.3);
-      color: var(--red); font-size: 0.75rem; font-weight: 600;
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--red-dim); border: 1px solid rgba(255, 59, 48, 0.25);
+      color: #FF5E3A; font-size: 0.75rem; font-weight: 700;
       letter-spacing: 0.08em; text-transform: uppercase;
-      padding: 4px 12px; border-radius: 99px; margin-bottom: 28px;
+      padding: 6px 16px; border-radius: 99px; margin-bottom: 28px;
     }
     .hero h1 {
-      font-size: clamp(2.6rem, 7vw, 4.5rem);
-      font-weight: 800; letter-spacing: -0.02em; line-height: 1.1;
-      margin-bottom: 20px;
+      font-size: clamp(2.8rem, 8vw, 4.8rem);
+      font-weight: 900; letter-spacing: -0.03em; line-height: 1.05;
+      margin-bottom: 24px;
+      background: linear-gradient(180deg, #FFFFFF 0%, #C8CDD6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
-    .hero h1 em { font-style: normal; color: var(--red); }
+    .hero h1 em {
+      background: linear-gradient(135deg, #FF3B30 0%, #FF5E3A 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-style: normal;
+    }
     .hero p.tagline {
-      font-size: 1.15rem; color: var(--muted);
-      max-width: 480px; margin: 0 auto 40px; line-height: 1.7;
+      font-size: clamp(1.1rem, 2.5vw, 1.25rem); color: var(--muted);
+      max-width: 580px; margin: 0 auto 44px; line-height: 1.8;
+      font-weight: 400;
     }
     .cta-row {
       display: flex; align-items: center; justify-content: center;
       gap: 16px; flex-wrap: wrap;
     }
     .btn {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 14px 28px; border-radius: 12px;
-      font-size: 0.95rem; font-weight: 600; text-decoration: none;
-      transition: transform 0.15s, box-shadow 0.15s;
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 16px 36px; border-radius: 14px;
+      font-size: 1.02rem; font-weight: 600; text-decoration: none;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .btn:hover { transform: translateY(-2px); }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px var(--red-glow);
+    }
     .btn-primary {
-      background: var(--red); color: #fff;
-      box-shadow: 0 4px 24px rgba(230,57,70,0.35);
+      background: var(--gradient); color: #fff;
+      box-shadow: 0 6px 20px rgba(255, 59, 48, 0.3);
     }
-    .btn-primary:hover { box-shadow: 0 8px 32px rgba(230,57,70,0.45); }
+    .btn-primary:hover { box-shadow: 0 8px 32px rgba(255, 59, 48, 0.45); }
     .btn-secondary {
       background: var(--surface); color: var(--muted);
       border: 1px solid var(--border);
     }
-    .btn-secondary:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+    .btn-secondary:hover { color: var(--text); border-color: rgba(255,255,255,0.25); }
     .apk-meta {
-      margin-top: 14px; font-size: 0.78rem; color: var(--muted);
+      margin-top: 18px; font-size: 0.85rem; color: var(--muted);
     }
-    .apk-meta a { color: var(--muted); text-decoration: underline; }
+    .apk-meta a { color: var(--muted); text-decoration: underline; transition: color 0.2s; }
+    .apk-meta a:hover { color: var(--text); }
 
     /* ── Divider ─────────────────────────────────────────── */
-    .divider { height: 1px; background: var(--border); margin: 0 32px; }
+    .divider { 
+      height: 1px; 
+      background: linear-gradient(to right, transparent, var(--border), transparent); 
+      margin: 0 auto;
+      max-width: 1000px;
+    }
 
     /* ── Sections ────────────────────────────────────────── */
-    .section { padding: 80px 24px; }
+    .section { 
+      padding: 100px 24px; 
+      max-width: 1200px; 
+      margin: 0 auto;
+      position: relative;
+    }
     .section-label {
-      text-align: center; font-size: 0.75rem; font-weight: 700;
-      letter-spacing: 0.12em; text-transform: uppercase;
-      color: var(--red); margin-bottom: 12px;
+      text-align: center; font-size: 0.75rem; font-weight: 800;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--red); margin-bottom: 14px;
     }
     .section-title {
       text-align: center;
-      font-size: clamp(1.6rem, 4vw, 2.4rem);
-      font-weight: 700; letter-spacing: -0.02em; margin-bottom: 12px;
+      font-size: clamp(1.8rem, 4.5vw, 2.6rem);
+      font-weight: 800; letter-spacing: -0.02em; margin-bottom: 14px;
+      color: #FFFFFF;
     }
     .section-sub {
       text-align: center; color: var(--muted);
-      font-size: 1rem; max-width: 480px; margin: 0 auto 56px;
+      font-size: 1.05rem; max-width: 560px; margin: 0 auto 64px;
+      line-height: 1.7;
     }
 
     /* ── Carousel ────────────────────────────────────────── */
     .carousel-wrap { position: relative; }
     .carousel {
-      display: flex; gap: 20px;
+      display: flex; gap: 28px;
       overflow-x: auto; scroll-snap-type: x mandatory;
       -webkit-overflow-scrolling: touch;
-      padding: 16px 48px 32px; scrollbar-width: none;
+      padding: 24px 60px 48px; scrollbar-width: none;
     }
     .carousel::-webkit-scrollbar { display: none; }
     .phone {
-      flex: 0 0 auto; scroll-snap-align: center; width: 210px;
-      border-radius: 28px; overflow: hidden;
-      border: 2px solid rgba(255,255,255,0.1);
-      box-shadow: 0 0 0 1px rgba(255,255,255,0.04), 0 24px 64px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06);
+      flex: 0 0 auto; scroll-snap-align: center; width: 230px;
+      border-radius: 36px; overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 
+        0 0 0 1px rgba(255,255,255,0.02), 
+        0 30px 70px rgba(0,0,0,0.65), 
+        0 0 45px rgba(0,0,0,0.45);
       background: #000;
-      transition: transform 0.25s, box-shadow 0.25s;
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      transform: scale(0.98);
     }
     .phone:hover {
-      transform: translateY(-8px) scale(1.02);
-      box-shadow: 0 0 0 1px rgba(230,57,70,0.25), 0 32px 80px rgba(0,0,0,0.7), 0 0 40px rgba(230,57,70,0.12);
+      transform: translateY(-10px) scale(1.03);
+      border-color: rgba(255, 59, 48, 0.3);
+      box-shadow: 
+        0 0 0 1px rgba(255, 59, 48, 0.25), 
+        0 40px 90px rgba(0,0,0,0.8), 
+        0 0 50px rgba(255, 59, 48, 0.15);
     }
     .phone img {
       width: 100%; display: block;
       object-fit: cover; object-position: top; max-height: 420px;
     }
     .phone-label {
-      padding: 10px 12px; font-size: 0.72rem; font-weight: 600;
-      color: var(--muted); letter-spacing: 0.04em;
-      background: var(--surface); border-top: 1px solid var(--border);
+      padding: 12px 16px; font-size: 0.8rem; font-weight: 600;
+      color: var(--text); text-align: center; letter-spacing: 0.04em;
+      background: rgba(18, 22, 32, 0.9); border-top: 1px solid var(--border);
     }
     .carousel-wrap::before, .carousel-wrap::after {
       content: ''; position: absolute; top: 0; bottom: 0;
-      width: 64px; pointer-events: none; z-index: 2;
+      width: 80px; pointer-events: none; z-index: 2;
     }
     .carousel-wrap::before { left: 0; background: linear-gradient(to right, var(--bg), transparent); }
     .carousel-wrap::after  { right: 0; background: linear-gradient(to left,  var(--bg), transparent); }
 
     /* ── Format pills ────────────────────────────────────── */
     .formats {
-      display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 36px;
+      display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 40px;
     }
     .pill {
-      padding: 6px 14px; border-radius: 99px;
-      font-size: 0.8rem; font-weight: 700; letter-spacing: 0.04em;
+      padding: 8px 18px; border-radius: 99px;
+      font-size: 0.85rem; font-weight: 700; letter-spacing: 0.06em;
+      transition: all 0.2s ease;
+      cursor: default;
     }
-    .pill-cbr  { background: rgba(229,57,53,0.15);  color: #EF5350; border: 1px solid rgba(229,57,53,0.3); }
-    .pill-cbz  { background: rgba(30,136,229,0.15); color: #42A5F5; border: 1px solid rgba(30,136,229,0.3); }
-    .pill-pdf  { background: rgba(255,143,0,0.15);  color: #FFA726; border: 1px solid rgba(255,143,0,0.3); }
-    .pill-epub { background: rgba(67,160,71,0.15);  color: #66BB6A; border: 1px solid rgba(67,160,71,0.3); }
-    .pill-cb7  { background: rgba(109,76,65,0.15);  color: #A1887F; border: 1px solid rgba(109,76,65,0.3); }
+    .pill:hover {
+      transform: scale(1.08);
+    }
+    .pill-cbr  { background: rgba(239,83,80,0.1);  color: #EF5350; border: 1px solid rgba(239,83,80,0.25); box-shadow: 0 2px 10px rgba(239,83,80,0.1); }
+    .pill-cbz  { background: rgba(66,165,245,0.1); color: #42A5F5; border: 1px solid rgba(66,165,245,0.25); box-shadow: 0 2px 10px rgba(66,165,245,0.1); }
+    .pill-pdf  { background: rgba(255,167,38,0.1);  color: #FFA726; border: 1px solid rgba(255,167,38,0.25); box-shadow: 0 2px 10px rgba(255,167,38,0.1); }
+    .pill-epub { background: rgba(102,187,106,0.1);  color: #66BB6A; border: 1px solid rgba(102,187,106,0.25); box-shadow: 0 2px 10px rgba(102,187,106,0.1); }
+    .pill-cb7  { background: rgba(161,136,127,0.1);  color: #A1887F; border: 1px solid rgba(161,136,127,0.25); box-shadow: 0 2px 10px rgba(161,136,127,0.1); }
 
     /* ── Features ────────────────────────────────────────── */
-    .features-bg { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .features-bg { 
+      background: radial-gradient(circle at 50% 50%, rgba(30, 41, 59, 0.4) 0%, transparent 80%);
+      border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); 
+    }
     .features-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 24px; max-width: 1000px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 28px; max-width: 1100px; margin: 0 auto;
     }
     .feature-card {
-      background: rgba(13,17,23,0.6); border: 1px solid var(--border);
-      border-radius: 16px; padding: 28px 24px;
-      transition: border-color 0.2s, transform 0.2s;
+      background: var(--surface); 
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 20px; padding: 32px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
     }
-    .feature-card:hover { border-color: rgba(230,57,70,0.3); transform: translateY(-3px); }
-    .feature-icon { font-size: 2rem; margin-bottom: 16px; }
-    .feature-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
-    .feature-card p { font-size: 0.875rem; color: var(--muted); line-height: 1.6; }
+    .feature-card:hover { 
+      border-color: rgba(255, 59, 48, 0.3); 
+      transform: translateY(-5px);
+      background: var(--surface-card);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 30px rgba(255, 59, 48, 0.05);
+    }
+    .feature-icon { 
+      font-size: 2rem; 
+      margin-bottom: 20px; 
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .feature-card h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 10px; color: #FFFFFF; }
+    .feature-card p { font-size: 0.9rem; color: var(--muted); line-height: 1.7; }
 
     /* ── Download CTA ────────────────────────────────────── */
     .cta-section {
-      text-align: center; padding: 100px 24px; position: relative; overflow: hidden;
-    }
-    .cta-section::before {
-      content: ''; position: absolute; bottom: -80px; left: 50%;
-      transform: translateX(-50%); width: 500px; height: 500px;
-      background: radial-gradient(circle, rgba(230,57,70,0.12) 0%, transparent 70%);
-      pointer-events: none;
+      text-align: center; padding: 120px 24px; position: relative; overflow: hidden;
+      background: radial-gradient(circle at 50% 50%, rgba(255, 59, 48, 0.08) 0%, transparent 60%);
     }
     .cta-section h2 {
-      font-size: clamp(1.8rem, 4vw, 2.8rem);
-      font-weight: 800; letter-spacing: -0.02em; margin-bottom: 16px;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 900; letter-spacing: -0.03em; margin-bottom: 20px;
     }
-    .cta-section p { color: var(--muted); font-size: 1rem; margin-bottom: 40px; }
+    .cta-section p { 
+      color: var(--muted); font-size: 1.1rem; margin-bottom: 40px; 
+      max-width: 500px; margin-left: auto; margin-right: auto;
+    }
 
     /* ── Footer ──────────────────────────────────────────── */
     footer {
-      border-top: 1px solid var(--border); padding: 32px;
+      border-top: 1px solid var(--border); padding: 40px;
       display: flex; align-items: center; justify-content: space-between;
-      flex-wrap: wrap; gap: 12px;
+      max-width: 1200px; margin: 0 auto;
+      flex-wrap: wrap; gap: 16px;
     }
-    footer p { font-size: 0.82rem; color: var(--muted); }
-    .footer-links { display: flex; gap: 20px; }
+    footer p { font-size: 0.88rem; color: var(--muted); }
+    .footer-links { display: flex; gap: 24px; }
     .footer-links a {
-      font-size: 0.82rem; color: var(--muted);
+      font-size: 0.88rem; color: var(--muted);
       text-decoration: none; transition: color 0.2s;
     }
     .footer-links a:hover { color: var(--text); }
 
-    @media (max-width: 600px) {
-      nav { padding: 0 20px; }
-      .hero { padding: 72px 20px 60px; }
-      .btn { padding: 12px 20px; font-size: 0.875rem; }
-      footer { flex-direction: column; align-items: flex-start; }
+    @media (max-width: 768px) {
+      nav { padding: 0 24px; }
+      .hero { padding: 80px 20px 60px; }
+      .btn { padding: 14px 28px; font-size: 0.95rem; }
+      .carousel { padding: 16px 24px 32px; }
+      .carousel-wrap::before, .carousel-wrap::after { width: 32px; }
+      footer { flex-direction: column; align-items: center; text-align: center; }
     }
   </style>
 </head>
 <body>
 
-<!-- ── Nav ───────────────────────────────────────────────── -->
-<nav>
-  <a class="nav-logo" href="#">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-    Inkwell<span class="dot">.</span>
-  </a>
-  <a class="nav-link" href="privacy-policy.html">Privacy Policy</a>
-</nav>
+  <!-- Background Blobs -->
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
 
-<!-- ── Hero ──────────────────────────────────────────────── -->
-<section class="hero">
-  <div class="badge">
-    <svg width="10" height="10" viewBox="0 0 10 10" fill="var(--red)"><circle cx="5" cy="5" r="5"/></svg>
-    Android App
-  </div>
-  <h1>Read your comics.<br><em>Your way.</em></h1>
-  <p class="tagline">
-    A local comic and book reader. No accounts, no cloud,
-    no tracking — just your files, beautifully organized.
-  </p>
-  <div class="cta-row">
-    <a class="btn btn-primary" href="https://play.google.com/store/apps/details?id=com.solutionbyhour.inkwell" target="_blank" rel="noopener">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-      Join the Beta on Play Store
+  <!-- ── Nav ───────────────────────────────────────────────── -->
+  <nav>
+    <a class="nav-logo" href="#">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      Inkwell<span class="dot">.</span>
     </a>
-  </div>
-  <p class="apk-meta">v1.3 &nbsp;·&nbsp; Android 8.0+ &nbsp;·&nbsp; <a href="privacy-policy.html">Privacy Policy</a></p>
-</section>
+    <a class="nav-link" href="privacy-policy.html">Privacy Policy</a>
+  </nav>
 
-<div class="divider"></div>
+  <!-- ── Hero ──────────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="badge">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="var(--red)"><circle cx="5" cy="5" r="5"/></svg>
+      Android App
+    </div>
+    <h1>Read your comics.<br><em>Your way.</em></h1>
+    <p class="tagline">
+      A local comic and book reader. No accounts, no cloud,
+      no tracking — just your files, beautifully organized.
+    </p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="https://play.google.com/store/apps/details?id=com.solutionbyhour.inkwell" target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Join the Beta on Play Store
+      </a>
+    </div>
+    <p class="apk-meta">v1.3 &nbsp;·&nbsp; Android 8.0+ &nbsp;·&nbsp; <a href="privacy-policy.html">Privacy Policy</a></p>
+  </section>
 
-<!-- ── Screenshots ───────────────────────────────────────── -->
-<section class="section">
-  <p class="section-label">Screenshots</p>
-  <h2 class="section-title">Everything you need, nothing you don't</h2>
-  <p class="section-sub">Clean grid, fast reader, smart organization. Works entirely offline.</p>
+  <div class="divider"></div>
 
-  <div class="carousel-wrap">
-    <div class="carousel">
-      <div class="phone">
-        <img src="screenshots/01-onboarding.png" alt="Inkwell welcome screen" loading="lazy" />
-        <div class="phone-label">Welcome</div>
+  <!-- ── Screenshots ───────────────────────────────────────── -->
+  <section class="section">
+    <p class="section-label">Screenshots</p>
+    <h2 class="section-title">Everything you need, nothing you don't</h2>
+    <p class="section-sub">Clean grid, fast reader, smart organization. Works entirely offline.</p>
+
+    <div class="carousel-wrap">
+      <div class="carousel">
+        <div class="phone">
+          <img src="screenshots/01-onboarding.png" alt="Inkwell welcome screen" loading="lazy" />
+          <div class="phone-label">Welcome</div>
+        </div>
+        <div class="phone">
+          <img src="screenshots/02-library.png" alt="Comic library grid" loading="lazy" />
+          <div class="phone-label">Library</div>
+        </div>
+        <div class="phone">
+          <img src="screenshots/03-reader.png" alt="Comic reader" loading="lazy" />
+          <div class="phone-label">Reader</div>
+        </div>
+        <div class="phone">
+          <img src="screenshots/04-collections.png" alt="Shelves view" loading="lazy" />
+          <div class="phone-label">Shelves</div>
+        </div>
+        <div class="phone">
+          <img src="screenshots/05-settings.png" alt="Settings screen" loading="lazy" />
+          <div class="phone-label">Settings</div>
+        </div>
       </div>
-      <div class="phone">
-        <img src="screenshots/02-library.png" alt="Comic library grid" loading="lazy" />
-        <div class="phone-label">Library</div>
+    </div>
+
+    <div class="formats">
+      <span class="pill pill-cbr">CBR</span>
+      <span class="pill pill-cbz">CBZ</span>
+      <span class="pill pill-pdf">PDF</span>
+      <span class="pill pill-epub">EPUB</span>
+      <span class="pill pill-cb7">CB7</span>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── Features ──────────────────────────────────────────── -->
+  <section class="section features-bg">
+    <p class="section-label">Features</p>
+    <h2 class="section-title">Built for readers</h2>
+    <p class="section-sub">Everything you expect from a modern comic reader, without the bloat.</p>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">📚</div>
+        <h3>All Your Formats</h3>
+        <p>CBR, CBZ, CB7, PDF, and EPUB — including RAR5 archives that most readers struggle with.</p>
       </div>
-      <div class="phone">
-        <img src="screenshots/03-reader.png" alt="Comic reader" loading="lazy" />
-        <div class="phone-label">Reader</div>
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h3>Completely Private</h3>
+        <p>No internet connection. No accounts. No analytics. Your reading list is yours alone.</p>
       </div>
-      <div class="phone">
-        <img src="screenshots/04-collections.png" alt="Shelves view" loading="lazy" />
-        <div class="phone-label">Shelves</div>
+      <div class="feature-card">
+        <div class="feature-icon">📖</div>
+        <h3>Manga &amp; Webtoons</h3>
+        <p>Right-to-left reading, auto-detected from ComicInfo.xml. Vertical scroll mode for webtoons.</p>
       </div>
-      <div class="phone">
-        <img src="screenshots/05-settings.png" alt="Settings screen" loading="lazy" />
-        <div class="phone-label">Settings</div>
+      <div class="feature-card">
+        <div class="feature-icon">🗂️</div>
+        <h3>Shelves &amp; Progress</h3>
+        <p>Organize with custom shelves. Track what you're reading, finished, and favorited.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">💾</div>
+        <h3>Backup &amp; Restore</h3>
+        <p>Export your reading progress to a file and restore it any time — no cloud required.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌙</div>
+        <h3>Dark Mode</h3>
+        <p>System, light, or dark theme. Material You dynamic colors on Android 12+.</p>
       </div>
     </div>
-  </div>
+  </section>
 
-  <div class="formats">
-    <span class="pill pill-cbr">CBR</span>
-    <span class="pill pill-cbz">CBZ</span>
-    <span class="pill pill-pdf">PDF</span>
-    <span class="pill pill-epub">EPUB</span>
-    <span class="pill pill-cb7">CB7</span>
-  </div>
-</section>
+  <!-- ── What's New ─────────────────────────────────────────── -->
+  <section class="section">
+    <p class="section-label">What's new</p>
+    <h2 class="section-title">v1.3 — Double-Page Spread Splitting</h2>
+    <p class="section-sub">A feature release introducing landscape page splitting, first-time onboarding walkthrough, and settings rating link.</p>
 
-<div class="divider"></div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">📖</div>
+        <h3>Double-Page Splitter</h3>
+        <p>Automatically splits landscape spreads into portrait page halves, respecting reading direction (LTR/RTL).</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">✨</div>
+        <h3>Onboarding Walkthrough</h3>
+        <p>First-time user walkthrough dialog helper guiding you through reading direction, folders, and shelves.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⭐</div>
+        <h3>Rate Inkwell</h3>
+        <p>Added a settings button linking to the Play Store review page to easily share your feedback.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🗂️</div>
+        <h3>Picked folder is the root</h3>
+        <p>The folder you pick is now your library root. Subfolders show up directly at the top level, not nested one deeper.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎨</div>
+        <h3>Better folder covers</h3>
+        <p>Folder thumbnails now sample one cover from each subfolder instead of four from whichever folder sorts first.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🛠️</div>
+        <h3>Reliable storage access</h3>
+        <p>Comics now open consistently across all storage providers — Drive, local storage, SD card, and SAF tree URIs all use the same code path.</p>
+      </div>
+    </div>
+  </section>
 
-<!-- ── Features ──────────────────────────────────────────── -->
-<section class="section features-bg">
-  <p class="section-label">Features</p>
-  <h2 class="section-title">Built for readers</h2>
-  <p class="section-sub">Everything you expect from a modern comic reader, without the bloat.</p>
+  <!-- ── Download CTA ───────────────────────────────────────── -->
+  <section class="cta-section">
+    <p class="section-label">Download</p>
+    <h2>Ready to start reading?</h2>
+    <p>Inkwell is in open beta on the Play Store while we polish the first release.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="https://play.google.com/store/apps/details?id=com.solutionbyhour.inkwell" target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Join the Beta on Play Store
+      </a>
+    </div>
+  </section>
 
-  <div class="features-grid">
-    <div class="feature-card">
-      <div class="feature-icon">📚</div>
-      <h3>All Your Formats</h3>
-      <p>CBR, CBZ, CB7, PDF, and EPUB — including RAR5 archives that most readers struggle with.</p>
+  <!-- ── Footer ────────────────────────────────────────────── -->
+  <footer>
+    <p>&copy; 2026 SolutionByHour. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="privacy-policy.html">Privacy Policy</a>
     </div>
-    <div class="feature-card">
-      <div class="feature-icon">🔒</div>
-      <h3>Completely Private</h3>
-      <p>No internet connection. No accounts. No analytics. Your reading list is yours alone.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">📖</div>
-      <h3>Manga &amp; Webtoons</h3>
-      <p>Right-to-left reading, auto-detected from ComicInfo.xml. Vertical scroll mode for webtoons.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">🗂️</div>
-      <h3>Shelves &amp; Progress</h3>
-      <p>Organize with custom shelves. Track what you're reading, finished, and favorited.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">💾</div>
-      <h3>Backup &amp; Restore</h3>
-      <p>Export your reading progress to a file and restore it any time — no cloud required.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">🌙</div>
-      <h3>Dark Mode</h3>
-      <p>System, light, or dark theme. Material You dynamic colors on Android 12+.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ── What's New ─────────────────────────────────────────── -->
-<section class="section">
-  <p class="section-label">What's new</p>
-  <h2 class="section-title">v1.3 — Double-Page Spread Splitting</h2>
-  <p class="section-sub">A feature release introducing landscape page splitting, first-time onboarding walkthrough, and settings rating link.</p>
-
-  <div class="features-grid">
-    <div class="feature-card">
-      <div class="feature-icon">📖</div>
-      <h3>Double-Page Splitter</h3>
-      <p>Automatically splits landscape spreads into portrait page halves, respecting reading direction (LTR/RTL).</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">✨</div>
-      <h3>Onboarding Walkthrough</h3>
-      <p>First-time user walkthrough dialog helper guiding you through reading direction, folders, and shelves.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">⭐</div>
-      <h3>Rate Inkwell</h3>
-      <p>Added a settings button linking to the Play Store review page to easily share your feedback.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">🗂️</div>
-      <h3>Picked folder is the root</h3>
-      <p>The folder you pick is now your library root. Subfolders show up directly at the top level, not nested one deeper.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">🎨</div>
-      <h3>Better folder covers</h3>
-      <p>Folder thumbnails now sample one cover from each subfolder instead of four from whichever folder sorts first.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">🛠️</div>
-      <h3>Reliable storage access</h3>
-      <p>Comics now open consistently across all storage providers — Drive, local storage, SD card, and SAF tree URIs all use the same code path.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ── Download CTA ───────────────────────────────────────── -->
-<section class="cta-section">
-  <p class="section-label">Download</p>
-  <h2>Ready to start reading?</h2>
-  <p>Inkwell is in open beta on the Play Store while we polish the first release.</p>
-  <div class="cta-row">
-    <a class="btn btn-primary" href="https://play.google.com/store/apps/details?id=com.solutionbyhour.inkwell" target="_blank" rel="noopener">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-      Join the Beta on Play Store
-    </a>
-  </div>
-  <p style="margin-top:16px; font-size:0.8rem; color:var(--muted);">
-    Requires Android 8.0 or later.
-  </p>
-</section>
-
-<!-- ── Footer ────────────────────────────────────────────── -->
-<footer>
-  <p>&copy; 2026 SolutionByHour. All rights reserved.</p>
-  <div class="footer-links">
-    <a href="privacy-policy.html">Privacy Policy</a>
-    <a href="mailto:shubhamkokul@gmail.com">Contact</a>
-  </div>
-</footer>
+  </footer>
 
 </body>
 </html>
